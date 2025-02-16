@@ -1,0 +1,60 @@
+#include <iostream>
+using namespace std;
+
+class Car {
+private:
+    string brand;
+    int model;
+    double fuelCapacity;
+    double currentFuel;
+    double fuel_consumption;
+public:
+    Car(string b, int m, double fuelCap, double fuelLevel)
+        : brand(b), model(m), fuelCapacity(fuelCap), currentFuel(fuelLevel), fuel_consumption(0.2) {}
+
+    void drive_car(double distance) {
+        double fuel = distance * fuel_consumption;  
+        if (fuel > currentFuel) {
+            cout << "Can't drive " << distance << " km. Not enough fuel!" << endl;
+        } else {
+            currentFuel -= fuel;
+            cout << "Drove " << distance << " km. Remaining fuel: " << currentFuel << " liters." << endl;
+        }
+        checkFuelStatus();
+    }
+
+    void refuel(double amount) {
+        if (amount <= 0) {
+            cout << "Invalid refuel amount! Must be greater than 0." << endl;
+        } else if (currentFuel + amount > fuelCapacity) {
+            cout << "Fuel tank cannot hold that much fuel. Max capacity: " << fuelCapacity << " liters." << endl;
+        } else {
+            currentFuel += amount;
+            cout << "Refueled " << amount << " liters. Current fuel level: " << currentFuel << " liters." << endl;
+        }
+    }
+
+    void checkFuelStatus() {
+        if (currentFuel < (fuelCapacity * 0.2)) {
+            cout << "WARNING: Low fuel! (" << currentFuel << " liters left)" << endl<<endl;
+        }
+    }
+
+    string getBrand() const { return brand; }
+    int getModel() const { return model; }
+    double getFuelCapacity() const { return fuelCapacity; }
+    double getCurrentFuelLevel() const { return currentFuel; }
+};
+
+int main() {
+    
+    Car zoyaCar("Honda", 2010, 50.0, 10.0);  
+
+    zoyaCar.drive_car(30);    
+    zoyaCar.refuel(20);   
+    zoyaCar.drive_car(100); 
+    zoyaCar.refuel(25);  
+    zoyaCar.checkFuelStatus(); 
+
+    return 0;
+}
