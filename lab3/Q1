@@ -1,0 +1,74 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Wallet {
+private:
+    string owner_Name;
+    double total_Balance;
+    static const int MAX_TRANSACTIONS = 100; 
+    string transaction_History[MAX_TRANSACTIONS]; 
+    int transaction_Count; 
+
+public:
+    
+    Wallet(string name, double balance) 
+        : owner_Name(name), total_Balance(balance), transaction_Count(0) {
+
+        if (transaction_Count < MAX_TRANSACTIONS) {
+            transaction_History[transaction_Count++] = "Initial Balance: $" + to_string(balance);
+        }
+    }
+
+        void add_Money(double a_money) {
+        if (a_money <= 0) {
+            cout << "Invalid amount to add. Amount must be positive." << endl;
+            return;
+        }
+        total_Balance += a_money;
+        if (transaction_Count < MAX_TRANSACTIONS) {
+            transaction_History[transaction_Count++] = "Added: $" + to_string(a_money);
+        } else {
+            cout << "Transaction history is full. Cannot record this transaction." << endl;
+        }
+    }
+
+    void spend_Money(double s_money) {
+        if (s_money <= 0) {
+            cout << "Invalid amount to spend. Amount must be positive." << endl;
+            return;
+        }
+        if (s_money > total_Balance) {
+            cout << "Insufficient Balance. Cannot spend $" << s_money << endl;
+        } else {
+            total_Balance -= s_money;
+            if (transaction_Count < MAX_TRANSACTIONS) {
+                transaction_History[transaction_Count++] = "Spent: $" + to_string(s_money);
+            } else {
+                cout << "Transaction history is full. Cannot record this transaction." << endl;
+            }
+        }
+    }
+
+
+    void display_trans() {
+        cout << owner_Name << "'s Transaction History:" << endl;
+        for (int i = 0; i < transaction_Count; i++) {
+            cout << transaction_History[i] << endl;
+        }
+        cout << "Current Balance: $" << total_Balance << endl;
+    }
+};
+
+int main() {
+
+    Wallet Saad("Saad", 100);
+
+    Saad.add_Money(1000);
+    Saad.spend_Money(20);
+    Saad.add_Money(10);
+    Saad.spend_Money(200);
+    Saad.display_trans();
+
+    return 0;
+}
