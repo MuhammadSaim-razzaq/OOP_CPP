@@ -1,0 +1,103 @@
+//24k-0704
+
+#include <iostream>
+using namespace std;
+
+class MusicPlayer {
+private:
+    string* playlist;
+    int size;
+    int capacity;
+    string currentlyPlayingSong;
+
+    void resizePlaylist() {
+        int newCapacity = capacity * 2;
+        string* newPlaylist = new string[newCapacity];
+        for (int i = 0; i < size; i++) {
+            newPlaylist[i] = playlist[i];
+        }
+        delete[] playlist;
+        playlist = newPlaylist;
+        capacity = newCapacity;
+    }
+
+public:
+    MusicPlayer(int cap = 5) {
+        capacity = cap;
+        size = 0;
+        playlist = new string[capacity];
+    }
+
+    ~MusicPlayer() {
+        delete[] playlist;
+    }
+
+    void addSong(const string& song) {
+        if (size == capacity) {
+            resizePlaylist();
+        }
+        playlist[size++] = song;
+        cout << "Added: " << song << " to the playlist." << endl;
+    }
+
+    void removeSong(const string& song) {
+        int index = -1;
+        for (int i = 0; i < size; i++) {
+            if (playlist[i] == song) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            cout << "Song not found: " << song << endl;
+            return;
+        }
+
+        for (int i = index; i < size - 1; i++) {
+            playlist[i] = playlist[i + 1];
+        }
+        size--;
+        cout << "Removed: " << song << " from the playlist." << endl;
+    }
+
+    void playSong(const string& song) {
+        for (int i = 0; i < size; i++) {
+            if (playlist[i] == song) {
+                currentlyPlayingSong = song;
+                cout << "Now Playing: " << song << endl;
+                return;
+            }
+        }
+        cout << "Song not in playlist: " << song << endl;
+    }
+
+    void displayPlaylist() {
+        if (size == 0) {
+            cout << "Playlist is empty!" << endl;
+            return;
+        }
+        cout << "Playlist:" << endl;
+        for (int i = 0; i < size; i++) {
+            cout << "  - " << playlist[i] << endl;
+        }
+    }
+};
+
+int main() {
+    MusicPlayer imranPlayer;
+
+    imranPlayer.addSong("Shape of You");
+    imranPlayer.addSong("Blinding Lights");
+    imranPlayer.addSong("Perfect");
+
+    imranPlayer.displayPlaylist();
+
+    imranPlayer.playSong("Blinding Lights");
+
+    imranPlayer.removeSong("Perfect");
+    imranPlayer.displayPlaylist();
+
+    imranPlayer.playSong("Someone You Loved"); 
+
+    return 0;
+}
