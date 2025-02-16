@@ -1,0 +1,120 @@
+//24k-0704
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Library {
+private:
+    static const int MAX_BOOKS = 100;
+    string bookList[MAX_BOOKS];
+    string borrowedBooks[MAX_BOOKS];
+    string availableBooks[MAX_BOOKS];
+    int bookCount;
+    int borrowedCount;
+    int availableCount;
+
+public:
+    Library() : bookCount(0), borrowedCount(0), availableCount(0) {}
+
+    void addBook(const string& bookName) {
+        if (bookCount >= MAX_BOOKS) {
+            cout << "Library is full. Cannot add more books." << endl;
+            return;
+        }
+        bookList[bookCount++] = bookName;
+        availableBooks[availableCount++] = bookName;
+        cout << "Added book: " << bookName << endl;
+    }
+
+    void lendBook(const string& bookName) {
+        bool found = false;
+        for (int i = 0; i < availableCount; i++) {
+            if (availableBooks[i] == bookName) {
+                found = true;
+                for (int j = i; j < availableCount - 1; j++) {
+                    availableBooks[j] = availableBooks[j + 1];
+                }
+                availableCount--;
+
+                if (borrowedCount < MAX_BOOKS) {
+                    borrowedBooks[borrowedCount++] = bookName;
+                    cout << "Book lent: " << bookName << endl;
+                } else {
+                    cout << "Borrowed books list is full. Cannot lend more books." << endl;
+                }
+                break;
+            }
+        }
+        if (!found) {
+            cout << "Book not available: " << bookName << endl;
+        }
+    }
+
+    void returnBook(const string& bookName) {
+        bool found = false;
+        for (int i = 0; i < borrowedCount; i++) {
+            if (borrowedBooks[i] == bookName) {
+                found = true;
+                for (int j = i; j < borrowedCount - 1; j++) {
+                    borrowedBooks[j] = borrowedBooks[j + 1];
+                }
+                borrowedCount--;
+
+                if (availableCount < MAX_BOOKS) {
+                    availableBooks[availableCount++] = bookName;
+                    cout << "Book returned: " << bookName << endl;
+                } else {
+                    cout << "Available books list is full. Cannot return more books." << endl;
+                }
+                break;
+            }
+        }
+        if (!found) {
+            cout << "Book not found in borrowed list: " << bookName << endl;
+        }
+    }
+
+    void displayBooks() {
+        cout << "All Books in the Library:" << endl;
+        for (int i = 0; i < bookCount; i++) {
+            cout << "- " << bookList[i] << endl;
+        }
+    }
+
+    void displayAvailableBooks() {
+        cout << "Available Books:" << endl;
+        for (int i = 0; i < availableCount; i++) {
+            cout << "- " << availableBooks[i] << endl;
+        }
+    }
+
+    void displayBorrowedBooks() {
+        cout << "Borrowed Books:" << endl;
+        for (int i = 0; i < borrowedCount; i++) {
+            cout << "- " << borrowedBooks[i] << endl;
+        }
+    }
+};
+
+int main() {
+    Library library;
+
+    library.addBook("The Great Gatsby");
+    library.addBook("1984");
+    library.addBook("To Kill a Mockingbird");
+
+    library.displayBooks();
+
+    library.lendBook("1984");
+
+    library.displayAvailableBooks();
+    library.displayBorrowedBooks();
+
+    library.returnBook("1984");
+
+    library.displayAvailableBooks();
+    library.displayBorrowedBooks();
+
+    return 0;
+}
