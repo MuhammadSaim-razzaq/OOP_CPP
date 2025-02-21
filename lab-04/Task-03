@@ -1,0 +1,71 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Car{
+    private:
+        string brand;
+        string model;
+        double rental_price;
+        bool availability;
+        int days;
+        
+    public:
+        Car(string b,string m,double r,bool a,int d):brand(b),model(m),rental_price(r),availability(a),days(d){};
+        
+        // Car(const Car& other) = default;
+
+        // ~Car() {
+        //     cout << "Destroying Car: " << brand << " " << model << endl;
+        // }
+
+        Car(const Car& other) : brand(other.brand), model(other.model),rental_price(other.rental_price),availability(other.availability),days(other.days) {}
+
+        ~Car() {
+            cout << "Destroying Car: " << brand << " " << model << endl;
+        }
+
+
+        void price(){
+            if(days>=5 &&days<10){
+                rental_price= rental_price -(rental_price*((double)5/100));
+                cout<<"PRICE : "<<rental_price<<endl;
+                }
+            else if(days>=10){
+                int price=0;
+                rental_price= rental_price -(rental_price*((double)10/100));
+                cout<<"PRICE"<<rental_price<<endl;
+                }
+            else{
+                cout<<"Price : "<<(rental_price)<<endl;
+            }
+        }
+
+        void update_availability() {
+            availability = !availability; 
+        }
+
+        void update(string b, string m, double r, bool a,int d){
+            brand = b;
+            model= m;
+            rental_price= r;
+            availability= a;
+        }
+
+        void rental_request(){
+            if(availability==true) {
+                cout<<"Available for rent"<<endl;
+                update_availability();
+                price();
+            }else{
+                cout<<"NOT available! The car is already rented and we are processing on your request plz try again Later."<<endl;
+                update_availability();
+            }             
+        }
+
+};
+int main(){
+    Car C1("Toyota","Generic",3000.0,true,7);
+    C1.rental_request();
+    C1.rental_request();
+}
