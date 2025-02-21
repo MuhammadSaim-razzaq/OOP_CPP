@@ -1,0 +1,41 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Car{
+    private:
+        string brand;
+        string model;
+        double rental_price;
+        bool availability;
+    public:
+        Car():brand("Unknown"),model("Generic"),rental_price(0.0),availability(true){};
+        
+        void update_availability(bool& availability){
+            if(availability==true){availability=false;}
+            else{availability=true;}
+        }
+
+        void update(string b, string m, double r, bool a){
+            brand = b;
+            model= m;
+            rental_price= r;
+            availability= a;
+        }
+
+        void rental_request(){
+            if(availability==true) {
+                cout<<"Available for rent"<<endl;
+                update_availability(availability);
+            }else{
+                cout<<"NOT available! The car is already rented and we are processing on your request plz try again Later."<<endl;
+                update_availability(availability);
+            }             
+        }
+
+};
+int main(){
+    Car C1;
+    C1.update("Toyota","Generic",3000.0,true);
+    C1.rental_request();
+}
