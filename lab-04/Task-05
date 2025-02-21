@@ -1,0 +1,87 @@
+//24k-0704
+
+#include <iostream>
+using namespace std;
+
+class Car {
+private:
+    string registration_number;
+    string brand;
+    string model;
+    double rental_price;
+    bool availability;
+    int days;
+    double total_revenue;
+
+public:
+    Car(string reg, string b, string m, double r, bool a, int d)
+        : registration_number(reg), brand(b), model(m), rental_price(r), availability(a), days(d), total_revenue(0.0) {}
+
+    Car(const Car& other) 
+        : registration_number(other.registration_number), brand(other.brand), model(other.model), 
+          rental_price(other.rental_price), availability(other.availability), days(other.days), 
+          total_revenue(other.total_revenue) {}
+
+    ~Car() {
+        cout << "Destroying Car: " << brand << " " << model << endl;
+    }
+
+    void price() {
+        if (days >= 5 && days < 10) {
+            rental_price -= rental_price * 0.05;
+        } else if (days >= 10) {
+            rental_price -= rental_price * 0.10;
+        }
+        cout << "Final Rental Price: " << rental_price << endl;
+    }
+
+    void update_availability() {
+        availability = !availability;
+    }
+
+    void update(string b, string m, double r, bool a, int d) {
+        brand = b;
+        model = m;
+        rental_price = r;
+        availability = a;
+        days = d;
+    }
+
+    void calculateRevenue() {
+        total_revenue += rental_price * days;
+        cout << "Total Revenue for " << brand << " " << model << ": " << total_revenue << endl;
+    }
+
+    void rental_request() {
+        if (availability) {
+            cout << "Car is available for rent." << endl;
+            calculateRevenue();
+            update_availability();
+            price();
+        } else {
+            cout << "Car is NOT available! Please try again later." << endl;
+        }
+    }
+
+    void displayDetails() {
+        cout << "\nCar Details:" << endl;
+        cout << "Registration Number: " << registration_number << endl;
+        cout << "Brand: " << brand << endl;
+        cout << "Model: " << model << endl;
+        cout << "Rental Price: " << rental_price << endl;
+        cout << "Availability: " << (availability ? "Available" : "Rented") << endl;
+        cout << "Total Revenue Generated: " << total_revenue << endl;
+    }
+};
+
+int main() {
+    Car C1("ABC123", "Toyota", "Generic", 3000.0, true, 7);
+    
+    C1.displayDetails();
+    C1.rental_request();
+    C1.displayDetails();
+    C1.rental_request();
+    C1.displayDetails();
+
+    return 0;
+}
