@@ -1,0 +1,54 @@
+//2k-0704
+
+#include<iostream>
+using namespace std;
+class Student
+{
+    int id;
+    string name;
+    int *scores;
+    int numScores;
+    public:
+        Student(int id,string name,int *input_scores,int numScores)
+        :id(id),name(name),numScores(numScores)
+        {
+            scores=new int[numScores];
+            for(int i=0;i<numScores;i++)
+            {
+                scores[i]=input_scores[i];
+            }
+        }
+
+        Student(const Student& other)
+        :id(other.id),name(other.name),numScores(other.numScores)
+        {
+            scores= new int[numScores];
+            for(int i=0;i<numScores;i++)
+            {
+                scores[i]=other.scores[i];
+            }
+        }
+
+        void display()
+        {
+            cout<<"Student ID: "<<id<<endl;
+            cout<<"Student Name:"<<name<<endl;
+            cout<<"Student Scores"<<endl;
+            for(int i=0; i<numScores;i++)
+            {
+                cout<<scores[i]<<" ";
+            }
+        }
+        ~Student(){
+            delete[] scores;
+        }
+};
+int main()
+{
+    int scores1[]={85,67,34,23};
+    int size= sizeof(scores1)/sizeof(scores1[0]);
+    Student S1(929,"john",scores1,size);
+    S1.display();
+    Student S2=S1;
+    S2.display();
+}
