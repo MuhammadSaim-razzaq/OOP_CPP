@@ -1,0 +1,45 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Vehicle{
+    protected:
+        string brand;
+        int speed;
+    public:
+        virtual void display(){
+            cout<<"Brand   :"<<(brand)<<endl;
+            cout<<"speed   :"<<(speed)<<endl;
+        }
+};
+class Car:public Vehicle{
+    protected:
+        int seats;
+    public:
+    virtual void display()override{
+        cout<<"Brand   :"<<(brand)<<endl;
+        cout<<"speed   :"<<(speed)<<endl;
+        cout<<"Seats   :"<<(seats)<<endl;
+    }
+};
+class ElectricCar: public Car{
+    protected:
+        int battery_life;
+    public:
+    ElectricCar(string brand , int speed ,int seats,int batterylife){
+        this->brand=brand;
+        this->battery_life=batterylife;
+        this->speed= speed;
+        this->seats=seats;
+    }
+    void display()override{
+        cout<<"Brand   :"<<(brand)<<endl;
+        cout<<"speed   :"<<(speed)<<endl;
+        cout<<"Seats   :"<<(seats)<<endl;
+        cout<<"Batterylife  :"<<(battery_life)<<endl;
+    }
+};
+int main(){
+    ElectricCar E1("tesla",240,5,56);
+    E1.display();
+}       
