@@ -1,0 +1,48 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Employees
+{
+    protected:
+        string name;
+        float salary;
+    public:
+        Employees(){};
+        Employees(string name, float salary):name(name),salary(salary){};
+
+        virtual void display()
+        {
+            cout<<"Name   :"<<(name)<<endl;
+            cout<<"Salary :"<<(salary)<<endl;
+        }
+    };
+class Manager:public Employees
+{
+    protected:
+        float bonus;
+    public:
+        Manager(string name,float salary,float bonus){
+            this->salary=salary;
+            this->name=name;
+            this->bonus= bonus;
+        }
+
+        void Normal_display(){
+            display();
+            cout<<"Bonus  :"<<(bonus)<<endl;
+
+        }
+        
+        void display()override{
+            cout<<"Name   :"<<(name)<<endl;
+            cout<<"Salary :"<<(salary)<<endl;
+            cout<<"Bonus  :"<<(bonus)<<endl;
+        }
+};
+
+
+int main(){
+    Manager M1("Johanthan",200000,2000);
+    M1.display();
+}
