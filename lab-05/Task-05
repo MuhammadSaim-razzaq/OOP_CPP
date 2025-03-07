@@ -1,0 +1,82 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Doctor
+{
+        string name, specialization,experience;
+    public:
+        Doctor(string name, string specialization,string experience)
+        : name(name), specialization(specialization),experience(experience){};
+
+        string getname(){return name;}
+        void display() {
+            cout << "Doctor Name: " << name << "," << ", Specialization: " << specialization <<"Experience :"<<experience<<endl;
+        }
+};
+class Hospital
+{
+        string name;
+        Doctor**doctors;
+        int doctorCount;
+        int maxdoctors;
+    public:
+        Hospital(string name)
+        :name(name),doctorCount(0),maxdoctors(2)
+        {
+            doctors= new Doctor*[maxdoctors];
+        }
+
+        void addDoctor(Doctor* doc);
+        void resize();
+
+        void display()
+        {
+            cout<<"Hospital Name: "<<name<<endl;
+            for(int i=0;i<doctorCount;i++)
+            {
+                cout<<"- "<<(doctors[i]->getname())<<endl;
+            }
+        }
+
+        ~Hospital(){
+            delete[]doctors;
+        }
+};
+void Hospital::addDoctor(Doctor* doc){
+    if(doctorCount<maxdoctors){
+        doctors[doctorCount++]=doc;
+    }
+    else{
+        resize();
+    }
+}
+void Hospital::resize()
+{
+    maxdoctors *=2;
+    Doctor**newdoc= new Doctor*[maxdoctors];
+    for(int i=0; i<doctorCount;i++)
+    {
+        newdoc[i]=doctors[i];
+    }
+    delete[]doctors;
+    doctors = newdoc;
+
+}
+int main(){
+    // Hospital h("City Hospital");
+
+    // Doctor d1("John Doe", "Cardiologist","4-years");
+    // Doctor d2("Jane Smith", "Neurologist","3-years");
+    // Doctor d3("Emily White", "Orthopedic","7-years");
+
+    Hospital* h= new Hospital("City Hospital");
+
+    Doctor* d1 = new Doctor("John Doe", "Cardiologist", "4-years"); 
+    Doctor* d2 = new Doctor("Jane Smith", "Neurologist", "3-years");  
+
+    h->addDoctor(d1);
+    h->addDoctor(d2);
+
+    h->display();
+}
