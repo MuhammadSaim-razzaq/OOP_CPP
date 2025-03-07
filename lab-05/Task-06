@@ -1,0 +1,116 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Level
+{
+    int levelNumber;
+    string difficulty;
+    public:
+        Level(int n,string d):levelNumber(n),difficulty(d){};
+
+        void setDifficulty(string newdiff){
+            difficulty =newdiff;
+        }
+        int getnumber()
+        {
+            return  levelNumber;
+        }
+        void display()
+        {
+            cout<<"Level "<<levelNumber<<" Difficulty: "<<difficulty<<endl;
+        }
+};
+class Videogame
+{
+        string title, genre;
+        int levelCount, capacity;
+        Level**levels;
+    public:
+        Videogame(string title,string genre)
+        :title(title), genre(genre), levelCount(0), capacity(2)
+        {
+            levels = new Level*[capacity];
+        }
+
+        void addlevel(int number, string difficuly);
+        //level remover
+        void removelevel(int num);
+        
+        void updateDifficulty(int n,string newdiff);
+        //level resizer
+        void resize();
+        //level finder function
+        Level* findlevel(int number){
+            for(int i=0;i<levelCount;i++){
+                if(levels[i]->getnumber()==number){
+                    return levels[i];
+                }
+            }
+            return nullptr;
+        }
+};
+void Videogame::addlevel(int number, string difficuly){
+    if(findlevel(number)!= nullptr){
+        cout<<"Level "<<number<<" already exists!\n";
+        return;
+    }
+    if(levelCount >= capacity){resize();}
+    levels[levelCount++] = new Level(number,difficuly);
+}
+
+void Videogame::removelevel(int num){
+    int index = -1;
+    for(int i=0; i<levelCount; i++){
+        if(levels[i]->getnumber()==num){
+            index=i;
+            break;
+        }
+    }
+    delete levels[index];
+
+    for(int i=index; i<levelCount-1;i++){
+        levels[i]=levels[i+1];
+    }
+    levelCount--;
+    cout<<"Level removed !"<<endl;
+
+    if(index== -1){
+        cout<<"No such Level exists!"<<endl;
+        return ;
+    }
+}
+
+void Videogame::resize(){
+    capacity*=2;
+    Level** newlevel = new Level*[capacity];
+    for(int i=0; i<levelCount;i++){
+        newlevel[i]=levels[i];
+    }
+    delete[] levels;
+    levels=newlevel;
+}
+
+void Videogame::updateDifficulty(int n,string newdiff){
+    Level* findresult = findlevel(n);
+    if(findresult!= nullptr){
+        findresult->setDifficulty(newdiff);
+        cout << "Difficulty updated for Level " << n << endl;
+    }else {
+        cout <<"Level "<<n<<" not found!\n";
+    }
+}
+
+int main() {
+    Videogame game("Epic Adventure", "RPG");
+
+    game.addlevel(1, "Easy");
+    game.addlevel(2, "Medium");
+    game.addlevel(3, "Hard");
+
+    game.updateDifficulty(2, "Very Hard");
+
+    game.removelevel(1);
+    
+   return 0;
+}
