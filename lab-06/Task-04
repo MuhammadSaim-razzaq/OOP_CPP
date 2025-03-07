@@ -1,0 +1,59 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Account{
+    protected:
+        int accountNumber;
+        float balance;
+    public:
+        virtual void display(){
+            cout<<"Account Number :"<<accountNumber<<endl;
+            cout<<"Balance   :"<<balance<<endl;
+        }
+};
+class savingsAccount:public Account{
+    protected:
+        float interestRate;
+    public:
+        savingsAccount(int accountNumber,float balance,float interestRate ){
+            this->accountNumber=accountNumber;
+            this->balance=balance;
+            this->interestRate=interestRate;
+        }
+        void display()override{
+            for(int i=0;i<25;i++){cout<<"-";}
+            cout<<"\nSavingsAccount Details \n\n";
+            cout<<"Account Number :"<<accountNumber<<endl;
+            cout<<"Balance   :"<<balance<<endl;
+            cout<<"Interset Rate :"<<interestRate<<endl;
+            for(int i=0;i<25;i++){cout<<"-";}
+        }
+};
+class CheckingAccount:public Account{
+    protected:
+        float overdraftLimit;
+    public:
+    CheckingAccount(int accountNumber,float balance,float overdraftLimit ){
+        this->accountNumber=accountNumber;
+        this->balance=balance;
+        this->overdraftLimit= overdraftLimit;
+    }
+    void display()override{
+        
+        for(int i=0;i<25;i++){cout<<"-";}
+        cout<<"\nCheckingAccount Details \n\n";
+        cout<<"Account Number :"<<accountNumber<<endl;
+        cout<<"Balance   :"<<balance<<endl;
+        cout<<"OverdraftLimit :"<<overdraftLimit<<endl;
+        for(int i=0;i<25;i++){cout<<"-";}
+    }
+};
+int main(){
+    CheckingAccount C1(3232,30000,300);
+    C1.display();
+
+    savingsAccount S1(332,20000,200);
+    S1.display();
+    
+}
