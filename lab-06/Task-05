@@ -1,0 +1,87 @@
+//24k-0704
+
+#include <iostream>
+using namespace std;
+
+class Device {
+protected:
+    int deviceID;
+    bool status;
+public:
+    void setDeviceDetails(int id, bool stat) {
+        deviceID = id;
+        status = stat;
+    }
+    virtual void displayDetails() {
+        cout << "Device ID: " << deviceID << endl;
+        cout << "Status: " << (status ? "ON" : "OFF") << endl;
+    }
+};
+
+class SmartPhone : virtual public Device {
+protected:
+    float screenSize;
+public:
+    void setScreenSize(float size) {
+        screenSize = size;
+    }
+    void displayDetails() override {
+        Device::displayDetails();
+        cout << "Screen Size: " << screenSize << " inches" << endl;
+    }
+};
+
+class SmartWatch : virtual public Device {
+protected:
+    bool heartRateMonitor;
+public:
+    void setHeartRateMonitor(bool monitor) {
+        heartRateMonitor = monitor;
+    }
+    void displayDetails() override {
+        Device::displayDetails();
+        cout << "Heart Rate Monitor: " << (heartRateMonitor ? "Enabled" : "Disabled") << endl;
+    }
+};
+
+class SmartWearable : public SmartPhone, public SmartWatch {
+private:
+    int stepCounter;
+public:
+    void setSmartWearableDetails(int id, bool stat, float size, bool monitor, int steps) {
+        setDeviceDetails(id, stat);
+        setScreenSize(size);
+        setHeartRateMonitor(monitor);
+        stepCounter = steps;
+    }
+    void displayDetails() override {
+        Device::displayDetails();
+        cout << "Screen Size: " << screenSize << " inches" << endl;
+        cout << "Heart Rate Monitor: " << (heartRateMonitor ? "Enabled" : "Disabled") << endl;
+        cout << "Step Counter: " << stepCounter << " steps" << endl;
+    }
+};
+
+int main() {
+    SmartWearable sw;
+    int deviceID, stepCounter;
+    bool status, heartRateMonitor;
+    float screenSize;
+
+    cout << "Enter Device ID: ";
+    cin >> deviceID;
+    cout << "Enter Status (1 for ON, 0 for OFF): ";
+    cin >> status;
+    cout << "Enter Screen Size (in inches): ";
+    cin >> screenSize;
+    cout << "Is Heart Rate Monitor enabled? (1 for Yes, 0 for No): ";
+    cin >> heartRateMonitor;
+    cout << "Enter Step Counter: ";
+    cin >> stepCounter;
+
+    sw.setSmartWearableDetails(deviceID, status, screenSize, heartRateMonitor, stepCounter);
+    cout << "\nSmart Wearable Details:\n";
+    sw.displayDetails();
+
+    return 0;
+}
