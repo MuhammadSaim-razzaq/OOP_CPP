@@ -1,0 +1,131 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Project;
+class Employee
+{
+    private:
+        int id;
+        string name;
+        string designation;
+        Project** projects;
+        int projectCount;
+        int maxProjects;
+    public:
+        Employee(int id, string name, string designation)
+        : id(id), name(name), designation(designation), projectCount(0), maxProjects(2)
+        {
+            projects = new Project*[maxProjects];
+        }
+
+        string getName() { return name; }
+
+        ~Employee() {
+            delete[] projects;
+        }        
+
+        void resizeProjects() {
+            maxProjects *= 2;
+            Project** newProjects = new Project*[maxProjects];
+            for (int i = 0; i < projectCount; i++) {
+                newProjects[i] = projects[i];
+            }
+            delete[] projects;
+            projects = newProjects;
+        }
+
+        void addProject(Project* project);
+        void display();
+};
+
+class Project
+{
+    private:
+        int id;
+        string Title;
+        string deadline;
+        Employee** employees;
+        int employeeCount;
+        int maxEmployees;
+    public:
+        Project(int id, string Title, string deadline)
+        : id(id), Title(Title), deadline(deadline), employeeCount(0), maxEmployees(2)
+        {
+            employees = new Employee*[maxEmployees];
+        }
+
+        string getTitle() { return Title; }
+
+        void resizeEmployees() {
+            maxEmployees *= 2;
+            Employee** newEmployees = new Employee*[maxEmployees];
+            for (int i = 0; i < employeeCount; i++) {
+                newEmployees[i] = employees[i];
+            }
+            delete[] employees;
+            employees = newEmployees;
+        }
+
+        void addEmployee(Employee* emp) {
+            if (employeeCount >= maxEmployees) {
+                resizeEmployees();
+            }
+            employees[employeeCount++] = emp;
+            emp->addProject(this);
+        }
+
+        void display() {
+            cout << "Project ID: " << id << endl;
+            cout << "Project Title: " << Title << endl;
+            cout << "Project Deadline: " << deadline << endl;
+            cout << "Employees Assigned:" << endl;
+            for (int i = 0; i < employeeCount; i++) {
+                cout << " " << employees[i]->getName() << endl;
+                for (int j = 0; j < 30; j++) cout << "-";
+                cout << endl;
+            }
+        }
+        
+        ~Project() {
+            delete[] employees;
+        }
+};
+
+void Employee::addProject(Project* project) {
+    if (projectCount >= maxProjects) {
+        resizeProjects();
+    }
+    projects[projectCount++] = project;
+}
+
+void Employee::display() {
+    cout << "Employee ID: " << id << endl;
+    cout << "Employee Name: " << name << endl;
+    cout << "Employee Designation: " << designation << endl;
+    cout << "Projects Assigned:" << endl;
+    for (int i = 0; i < projectCount; i++) {
+        cout << " " << projects[i]->getTitle() << endl;
+    }
+    for (int i = 0; i < 30; i++) cout << "-";
+    cout << endl;
+}
+
+int main() {
+    Employee e1(1, "John Doe", "Software Engineer");
+    Employee e2(2, "Jane Smith", "Project Manager");
+
+    Project p1(101, "AI System", "30-06-2025");
+    Project p2(102, "Web Application", "15-05-2025");
+
+    p1.addEmployee(&e1);
+    p1.addEmployee(&e2);
+    p2.addEmployee(&e1);
+
+    p1.display();
+    p2.display();
+    e1.display();
+    e2.display();
+
+    return 0;
+}
