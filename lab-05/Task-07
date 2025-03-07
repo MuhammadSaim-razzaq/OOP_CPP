@@ -1,0 +1,71 @@
+24k-0704
+
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Product {
+    int id;
+    string name;
+    int quantity;
+public:
+    Product(int i, string n, int q) : id(i), name(n), quantity(q) {}
+    int getId() { return id; }
+    string getName() { return name; }
+    void display() { cout << "ID: " << id << ", Name: " << name << ", Quantity: " << quantity << endl; }
+    friend class Inventory;
+};
+
+class Inventory {
+    Product** products;
+    int count;
+    int capacity;
+public:
+    Inventory() : count(0), capacity(2) { products = new Product*[capacity]; }
+    void resize() {
+        capacity *= 2;
+        Product** newProducts = new Product*[capacity];
+        for (int i = 0; i < count; i++) newProducts[i] = products[i];
+        delete[] products;
+        products = newProducts;
+    }
+    void addProduct(int id, string name, int quantity) {
+        if (count == capacity) resize();
+        products[count++] = new Product(id, name, quantity);
+    }
+    void sortByName() {
+        for (int i = 0; i < count - 1; i++) {
+            for (int j = i + 1; j < count; j++) {
+                if (products[i]->name > products[j]->name) {
+                    Product* temp = products[i];
+                    products[i] = products[j];
+                    products[j] = temp;
+                }
+            }
+        }
+    }
+    Product* searchById(int id) {
+        for (int i = 0; i < count; i++) if (products[i]->id == id) return products[i];
+        return nullptr;
+    }
+    void display() {
+        for (int i = 0; i < count; i++) products[i]->display();
+    }
+    ~Inventory() {
+        for (int i = 0; i < count; i++) delete products[i];
+        delete[] products;
+    }
+};
+
+int main() {
+    Inventory inv;
+    inv.addProduct(101, "Chair", 50);
+    inv.addProduct(102, "Table", 30);
+    inv.addProduct(103, "Laptop", 20);
+    inv.sortByName();
+    inv.display();
+    Product* p = inv.searchById(102);
+    if (p) p->display();
+    else cout << "Product not found!";
+    return 0;
+}
