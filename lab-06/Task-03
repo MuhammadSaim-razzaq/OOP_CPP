@@ -1,0 +1,74 @@
+//24k-0704
+
+#include <iostream>
+using namespace std;
+
+class Person {
+protected:
+    string name;
+    int age;
+
+public:
+    void setName(string n) { name = n; }
+    void setAge(int a) { age = a; }
+
+    virtual void display() {
+        cout << "Name  :" << name << endl;
+        cout << "Age   :" << age << endl;
+    }
+};
+
+class Teacher : virtual public Person {
+protected:
+    string subject;
+
+public:
+    void setSubject(string s) { subject = s; }
+
+    virtual void display() {
+        cout << "Name  :" << name << endl;
+        cout << "Age   :" << age << endl;
+        cout << "Subject   :" << subject << endl;
+    }
+};
+
+class Researcher : virtual public Person {
+protected:
+    string researchArea;
+
+public:
+    void setResearchArea(string r) { researchArea = r; }
+
+    virtual void display() {
+        cout << "Name  :" << name << endl;
+        cout << "Age   :" << age << endl;
+        cout << "ResearchArea   :" << researchArea << endl;
+    }
+};
+
+class Professor : public Teacher, public Researcher {
+protected:
+    int publications;
+
+public:
+    void setPublications(int p) { publications = p; }
+
+    void display() override {
+        cout << "Name  :" << name << endl;
+        cout << "Age   :" << age << endl;
+        cout << "ResearchArea   :" << researchArea << endl;
+        cout << "Subject   :" << subject << endl;
+        cout << "Publications   :" << publications << endl;
+    }
+};
+
+int main() {
+    Professor prof;
+    prof.setName("Dr. John Smith");
+    prof.setAge(45);
+    prof.setSubject("Computer Science");
+    prof.setResearchArea("Artificial Intelligence");
+    prof.setPublications(30);
+    prof.display();
+    return 0;
+}
