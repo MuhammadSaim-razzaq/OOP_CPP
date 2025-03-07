@@ -1,0 +1,43 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class AlarmSystem
+{
+    private:
+        string securityLevel;
+    public:
+        AlarmSystem(string security)
+        :securityLevel(security){};
+
+        void setSecurity(string security){
+            securityLevel=security;
+        }
+
+        void display(){
+            cout<<"Security Level: "<<securityLevel<<endl;
+        }
+};
+class SmartHome
+{
+    private:
+        string name;
+        AlarmSystem alarm;
+    public:
+        SmartHome(string name,string security)
+        :name(name),alarm(security){};
+
+        void display()
+        {
+            cout<<"Smart Home: " << name << endl;
+            alarm.display();
+        }
+};
+int main()
+{
+    SmartHome home1("Modern Villa", "High");
+    SmartHome home2("Apartment", "Medium");
+
+    home1.display();
+    home2.display();
+}
