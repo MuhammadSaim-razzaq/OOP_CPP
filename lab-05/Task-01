@@ -1,0 +1,50 @@
+//24k-0704
+
+#include<iostream>
+using namespace std;
+class Appartment{
+        int id;
+        string address;
+        string * owners_name;
+
+    public:
+        Appartment(int id,string address,const string& owner )
+        :id(id),address(address)
+        {
+            owners_name = new string(owner);
+        }
+
+        void setid(int id){this->id = id;}
+        void setaddress(string address){this->address = address;}
+        void setOwnersname(const string &owner){
+            delete owners_name;
+            owners_name=new string(owner);}
+
+        int getid(){return id;}
+        string getaddress(){return address;}
+        const string getownerName(){return *owners_name;}
+
+
+        Appartment(const Appartment& other)
+        :id(other.id),address(other.address)
+        {
+            owners_name= new string(*other.owners_name);
+        }
+
+        void display()
+        {
+            cout<<"Owner's Name :"<<*owners_name<<endl;
+            cout<<"Appartment id :"<<id<<endl;
+            cout<<"Appartment Address :"<<address<<endl;
+        }
+        
+        ~Appartment(){
+            delete owners_name;
+        }
+};
+int main(){
+   Appartment a(704,"green town","john");
+   a.display();
+   Appartment a1=a;
+   a1.display();
+}
