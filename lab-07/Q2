@@ -1,0 +1,178 @@
+//24k-0704
+
+#include<iostream>
+#include<string>
+using namespace std;
+
+class Merchandise {
+protected:
+    int itemID;
+    string itemName;
+    float itemCost;
+    int itemStock;
+
+public:
+    Merchandise(int id, string name, float cost, int stock)
+    {
+        itemID = id;
+        itemName = name;
+        itemCost = cost;
+        itemStock = stock;
+    }
+
+    virtual void applyReduction()
+    {
+        itemCost -= itemCost * 0.1;
+    }
+
+    virtual void computeTotalCost(int quantity)
+    {
+        cout << "Total Cost: " << itemCost * quantity << endl;
+    }
+
+    virtual void showDetails()
+    {
+        cout << "Item ID: " << itemID << endl;
+        cout << "Item Name: " << itemName << endl;
+        cout << "Item Cost: " << itemCost << endl;
+        cout << "Stock Available: " << itemStock << endl;
+    }
+
+    Merchandise operator+(Merchandise &m)
+    {
+        return Merchandise(0, "Bulk Deal", itemCost + m.itemCost, 0);
+    }
+
+    friend void operator<<(ostream& out, Merchandise &m)
+    {
+        out << "Item Name: " << m.itemName << endl;
+        out << "Item Cost: " << m.itemCost << endl;
+    }
+};
+
+class Electronics: public Merchandise
+{
+    string warranty;
+    string brand;
+
+public:
+    Electronics(int id, string name, float cost, int stock, string warrantyPeriod, string brandName) : Merchandise(id, name, cost, stock)
+    {
+        warranty = warrantyPeriod;
+        brand = brandName;
+    }
+
+    void showDetails() override
+    {
+        Merchandise::showDetails();
+        cout << "Warranty: " << warranty << endl;
+        cout << "Brand: " << brand << endl;
+    }
+};
+
+class Apparel: public Merchandise
+{
+    string size;
+    string fabric;
+    string color;
+
+public:
+    Apparel(int id, string name, float cost, int stock, string apparelSize, string material, string shade) : Merchandise(id, name, cost, stock)
+    {
+        size = apparelSize;
+        fabric = material;
+        color = shade;
+    }
+
+    void applyReduction() override
+    {
+        itemCost -= itemCost * 0.2;
+    }
+
+    void showDetails() override
+    {
+        Merchandise::showDetails();
+        cout << "Size: " << size << endl;
+        cout << "Material: " << fabric << endl;
+        cout << "Color: " << color << endl;
+    }
+};
+
+class Grocery: public Merchandise
+{
+    string expiry;
+    int energyValue;
+
+public:
+    Grocery(int id, string name, float cost, int stock, string expDate, int calories) : Merchandise(id, name, cost, stock)
+    {
+        expiry = expDate;
+        energyValue = calories;
+    }
+
+    void computeTotalCost(int quantity) override
+    {
+        itemCost -= itemCost * 0.5;
+        cout << "Total Cost: " << itemCost * quantity << endl;
+    }
+
+    void showDetails() override
+    {
+        Merchandise::showDetails();
+        cout << "Expiry Date: " << expiry << endl;
+        cout << "Calories: " << energyValue << endl;
+    }
+};
+
+class Literature: public Merchandise
+{
+    string author;
+    string category;
+
+public:
+    Literature(int id, string name, float cost, int stock, string writer, string genre) : Merchandise(id, name, cost, stock)
+    {
+        author = writer;
+        category = genre;
+    }
+
+    void showDetails() override
+    {
+        Merchandise::showDetails();
+        cout << "Author: " << author << endl;
+        cout << "Genre: " << category << endl;
+    }
+};
+
+int main()
+{
+    Electronics e1(1, "Gaming Laptop", 50000, 10, "1 Year", "Asus");
+    Apparel c1(2, "T-Shirt", 1500, 20, "L", "Polyester", "Black");
+    Grocery f1(3, "Oatmeal", 500, 100, "01/01/2024", 250);
+    Literature b1(4, "The Alchemist", 700, 5, "Paulo Coelho", "Philosophical Fiction");
+
+    e1.showDetails();
+    cout << endl;
+    c1.showDetails();
+    cout << endl;
+    f1.showDetails();
+    cout << endl;
+    b1.showDetails();
+    cout << endl;
+
+    e1.applyReduction();
+    c1.applyReduction();
+    f1.computeTotalCost(5);
+
+    Merchandise p1 = e1 + c1;
+    cout << p1;
+
+    cout << endl;
+    cout << "Displaying via Friend Function: " << endl;
+    cout << e1;
+    cout << c1;
+    cout << f1;
+    cout << b1;
+
+    return 0;
+}
