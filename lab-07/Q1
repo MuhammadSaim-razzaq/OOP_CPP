@@ -1,0 +1,117 @@
+//24k-0704
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Device {
+protected:
+    int id;
+    string name;
+    string state;
+
+public:
+    Device(int devId, string devName, string devState) : id(devId), name(devName), state(devState) {}
+    
+    virtual void powerOn() { state = "ON"; }
+    virtual void powerOff() { state = "OFF"; }
+    virtual string getState() const { return state; }
+    
+    virtual void showDetails() const {
+        cout << "Device ID: " << id << "\nName: " << name << "\nState: " << state << "\n";
+    }
+    
+    virtual ~Device() {} 
+};
+
+class Light : public Device {
+    int brightness;
+    string color;
+
+public:
+    Light(int devId, string devName, string devState, int bright, string col)
+        : Device(devId, devName, devState), brightness(bright), color(col) {}
+
+    void showDetails() const override {
+        Device::showDetails();
+        cout << "Brightness: " << brightness << "\nColor: " << color << "\n";
+    }
+};
+
+class Thermostat : public Device {
+    int currentTemp;
+    string mode;
+    int targetTemp;
+
+public:
+    Thermostat(int devId, string devName, string devState, int temp, string mod, int target)
+        : Device(devId, devName, devState), currentTemp(temp), mode(mod), targetTemp(target) {}
+
+    string getState() const override { return to_string(currentTemp); }
+    
+    void showDetails() const override {
+        Device::showDetails();
+        cout << "Current Temperature: " << currentTemp << "\nMode: " << mode << "\nTarget: " << targetTemp << "\n";
+    }
+};
+
+class SecurityCamera : public Device {
+    string resolution;
+    bool recording;
+    string nightVision;
+
+public:
+    SecurityCamera(int devId, string devName, string devState, string res, bool rec, string night)
+        : Device(devId, devName, devState), resolution(res), recording(rec), nightVision(night) {}
+
+    void powerOn() override { recording = true; }
+    
+    void showDetails() const override {
+        Device::showDetails();
+        cout << "Resolution: " << resolution << "\nRecording: " << (recording ? "Active" : "Inactive")
+             << "\nNight Vision: " << nightVision << "\n";
+    }
+};
+
+class SmartPlug : public Device {
+    int powerUsage;
+    string timer;
+
+public:
+    SmartPlug(int devId, string devName, string devState, int power, string time)
+        : Device(devId, devName, devState), powerUsage(power), timer(time) {}
+
+    void powerOff() override {
+        cout << "Logging power consumption...\n";
+        Device::powerOff();
+    }
+
+    void showDetails() const override {
+        Device::showDetails();
+        cout << "Power Usage: " << powerUsage << "W\nTimer: " << timer << "\n";
+    }
+};
+
+int main() {
+    Light roomLight(1, "Room Light", "OFF", 80, "Warm");
+    Thermostat homeTemp(2, "Thermostat", "ON", 22, "Cooling", 24);
+    SecurityCamera doorCam(3, "Door Cam", "OFF", "1080p", false, "Enabled");
+    SmartPlug kitchenPlug(4, "Kitchen Plug", "ON", 200, "3 hours");
+
+    cout << "Device Details:\n";
+    roomLight.showDetails();
+    homeTemp.showDetails();
+    doorCam.showDetails();
+    kitchenPlug.showDetails();
+
+    cout << "\nActivating Room Light...\n";
+    roomLight.powerOn();
+    roomLight.showDetails();
+
+    cout << "\nTurning off Kitchen Plug...\n";
+    kitchenPlug.powerOff();
+    kitchenPlug.showDetails();
+
+    return 0;
+}
