@@ -1,0 +1,81 @@
+//24k-0704
+
+#include <iostream>
+
+using namespace std;
+
+class Matrix2x2 {
+private:
+    int a, b, c, d;
+
+public:
+    Matrix2x2(int a1 = 0, int b1 = 0, int c1 = 0, int d1 = 0) : a(a1), b(b1), c(c1), d(d1) {}
+
+    Matrix2x2 operator+(const Matrix2x2& other) const {
+        return Matrix2x2(a + other.a, b + other.b, c + other.c, d + other.d);
+    }
+
+    Matrix2x2 operator-(const Matrix2x2& other) const {
+        return Matrix2x2(a - other.a, b - other.b, c - other.c, d - other.d);
+    }
+
+    Matrix2x2 operator*(const Matrix2x2& other) const {
+        return Matrix2x2(
+            a * other.a + b * other.c,
+            a * other.b + b * other.d,
+            c * other.a + d * other.c,
+            c * other.b + d * other.d
+        );
+    }
+
+    friend int determinant(const Matrix2x2& m);
+    friend class MatrixHelper;
+    friend ostream& operator<<(ostream& os, const Matrix2x2& m);
+};
+
+class MatrixHelper {
+public:
+    static void updateElement(Matrix2x2& m, int row, int col, int value) {
+        if (row == 0 && col == 0) m.a = value;
+        else if (row == 0 && col == 1) m.b = value;
+        else if (row == 1 && col == 0) m.c = value;
+        else if (row == 1 && col == 1) m.d = value;
+        else cout << "Invalid matrix position" << endl;
+    }
+};
+
+int determinant(const Matrix2x2& m) {
+    return m.a * m.d - m.b * m.c;
+}
+
+ostream& operator<<(ostream& os, const Matrix2x2& m) {
+    os << "[" << m.a << " " << m.b << "]\n";
+    os << "[" << m.c << " " << m.d << "]";
+    return os;
+}
+
+int main() {
+    Matrix2x2 m1(1, 2, 3, 4);
+    Matrix2x2 m2(5, 6, 7, 8);
+
+    cout << "Matrix 1:\n" << m1 << endl << endl;
+    cout << "Matrix 2:\n" << m2 << endl << endl;
+
+    Matrix2x2 sum = m1 + m2;
+    cout << "Sum:\n" << sum << endl << endl;
+
+    Matrix2x2 diff = m1 - m2;
+    cout << "Difference:\n" << diff << endl << endl;
+
+    Matrix2x2 product = m1 * m2;
+    cout << "Product:\n" << product << endl << endl;
+
+    cout << "Determinant of m1: " << determinant(m1) << endl;
+    cout << "Determinant of m2: " << determinant(m2) << endl << endl;
+
+    MatrixHelper::updateElement(m1, 0, 1, 9);
+    cout << "Updated m1:\n" << m1 << endl;
+    cout << "New determinant: " << determinant(m1) << endl;
+
+    return 0;
+}
