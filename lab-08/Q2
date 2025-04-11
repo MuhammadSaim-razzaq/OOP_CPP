@@ -1,0 +1,85 @@
+//24k-0704
+
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Account {
+private:
+    string accountNumber;
+    double balance;
+
+public:
+    Account(string num = "", double bal = 0.0) : accountNumber(num), balance(bal) {}
+
+    string getAccountNumber() const { return accountNumber; }
+    double getBalance() const { return balance; }
+
+    friend class Manager;
+    friend void transferFunds(Account& from, Account& to, double amount);
+};
+
+class Manager {
+public:
+    static void displayAccount(const Account& acc) {
+        cout << "Account: " << acc.accountNumber << endl;
+        cout << "Balance: $" << acc.balance << endl;
+    }
+
+    static void deposit(Account& acc, double amount) {
+        if (amount > 0) {
+            acc.balance += amount;
+            cout << "Deposited $" << amount << " to account " << acc.accountNumber << endl;
+        } else {
+            cout << "Invalid deposit amount" << endl;
+        }
+    }
+
+    static void withdraw(Account& acc, double amount) {
+        if (amount > 0 && amount <= acc.balance) {
+            acc.balance -= amount;
+            cout << "Withdrew $" << amount << " from account " << acc.accountNumber << endl;
+        } else {
+            cout << "Invalid withdrawal amount or insufficient funds" << endl;
+        }
+    }
+};
+
+void transferFunds(Account& from, Account& to, double amount) {
+    if (amount <= 0) {
+        cout << "Invalid transfer amount" << endl;
+        return;
+    }
+    if (from.balance >= amount) {
+        from.balance -= amount;
+        to.balance += amount;
+        cout << "Transferred $" << amount << " from account " << from.accountNumber 
+             << " to account " << to.accountNumber << endl;
+    } else {
+        cout << "Insufficient funds for transfer" << endl;
+    }
+}
+
+int main() {
+    Account acc1("A1001", 5000.0);
+    Account acc2("A1002", 3000.0);
+
+    cout << "Initial account states:" << endl;
+    Manager::displayAccount(acc1);
+    Manager::displayAccount(acc2);
+    cout << endl;
+
+    Manager::deposit(acc1, 1000.0);
+    Manager::withdraw(acc2, 500.0);
+    cout << endl;
+
+    transferFunds(acc1, acc2, 1500.0);
+    cout << endl;
+
+    cout << "Final account states:" << endl;
+    Manager::displayAccount(acc1);
+    Manager::displayAccount(acc2);
+
+    return 0;
+}
