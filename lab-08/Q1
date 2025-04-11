@@ -1,0 +1,139 @@
+//24k-0704
+
+
+#include <iostream>
+#include <cmath>
+#include <stdexcept>
+
+using namespace std;
+
+class Complex {
+private:
+    double* real;
+    double* imag;
+
+public:
+    Complex(double r = 0.0, double i = 0.0) {
+        real = new double(r);
+        imag = new double(i);
+    }
+
+    Complex(const Complex& other) {
+        real = new double(*other.real);
+        imag = new double(*other.imag);
+    }
+
+    ~Complex() {
+        delete real;
+        delete imag;
+    }
+
+    Complex& operator=(const Complex& other) {
+        if (this != &other) {
+            *real = *other.real;
+            *imag = *other.imag;
+        }
+        return *this;
+    }
+
+    double getReal() const { return *real; }
+    double getImag() const { return *imag; }
+
+    void setReal(double r) { *real = r; }
+    void setImag(double i) { *imag = i; }
+
+    Complex operator+(const Complex& other) const {
+        return Complex(*real + *other.real, *imag + *other.imag);
+    }
+
+    Complex operator-(const Complex& other) const {
+        return Complex(*real - *other.real, *imag - *other.imag);
+    }
+
+    Complex operator*(const Complex& other) const {
+        double r = (*real * *other.real) - (*imag * *other.imag);
+        double i = (*real * *other.imag) + (*imag * *other.real);
+        return Complex(r, i);
+    }
+
+    Complex operator/(const Complex& other) const {
+        double denominator = (*other.real * *other.real) + (*other.imag * *other.imag);
+        if (denominator == 0) {
+            throw runtime_error("Division by zero in complex number");
+        }
+        double r = ((*real * *other.real) + (*imag * *other.imag)) / denominator;
+        double i = ((*imag * *other.real) - (*real * *other.imag)) / denominator;
+        return Complex(r, i);
+    }
+
+    friend double magnitude(const Complex& c);
+    friend ostream& operator<<(ostream& os, const Complex& c);
+    friend istream& operator>>(istream& is, Complex& c);
+};
+
+double magnitude(const Complex& c) {
+    return sqrt((*c.real * *c.real) + (*c.imag * *c.imag));
+}
+
+ostream& operator<<(ostream& os, const Complex& c) {
+    os << "(" << *c.real;
+    if (*c.imag >= 0) {
+        os << " + " << *c.imag << "i)";
+    } else {
+        os << " - " << -(*c.imag) << "i)";
+    }
+    return os;
+}
+
+istream& operator>>(istream& is, Complex& c) {
+    char ch;
+    is >> ch;
+    is >> *c.real;
+    is >> ch;
+    if (ch == '-') {
+        *c.imag = -1.0;
+    } else {
+        *c.imag = 1.0;
+    }
+    double im;
+    is >> im;
+    *c.imag *= im;
+    is >> ch;
+    is >> ch;
+    return is;
+}
+
+int main() {
+    Complex c1(3, 4);
+    Complex c2(1, -2);
+
+    cout << "Complex Number 1: " << c1 << endl;
+    cout << "Complex Number 2: " << c2 << endl;
+
+    Complex sum = c1 + c2;
+    cout << "Sum: " << sum << endl;
+
+    Complex diff = c1 - c2;
+    cout << "Difference: " << diff << endl;
+
+    Complex product = c1 * c2;
+    cout << "Product: " << product << endl;
+
+    try {
+        Complex quotient = c1 / c2;
+        cout << "Quotient: " << quotient << endl;
+    } catch (const runtime_error& e) {
+        cerr << "Error: " << e.what() << endl;
+    }
+
+    cout << "Magnitude of c1: " << magnitude(c1) << endl;
+    cout << "Magnitude of c2: " << magnitude(c2) << endl;
+
+    Complex c3;
+    cout << "Enter a complex number in format (a + bi): ";
+    cin >> c3;
+    cout << "You entered: " << c3 << endl;
+    cout << "Its magnitude is: " << magnitude(c3) << endl;
+
+    return 0;
+}
