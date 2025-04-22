@@ -1,0 +1,52 @@
+24k-0704
+#include <iostream>
+#include <string>
+using namespace std;
+
+class MetricsSensor {
+public:
+    virtual double readData() = 0;
+    virtual void displayReport() = 0;
+    virtual ~MetricsSensor() {}
+};
+
+class Thermometer : public MetricsSensor {
+private:
+    double temperature;
+public:
+    Thermometer(double temp) : temperature(temp) {}
+    double readData() override {
+        return temperature;
+    }
+    void displayReport() override {
+        cout << "Thermometer Report: " << temperature << "°C" << endl;
+    }
+};
+
+class Barometer : public MetricsSensor {
+private:
+    double pressure;
+public:
+    Barometer(double press) : pressure(press) {}
+    double readData() override {
+        return pressure;
+    }
+    void displayReport() override {
+        cout << "Barometer Report: " << pressure << " hPa" << endl;
+    }
+};
+
+int main() {
+    MetricsSensor* s1 = new Thermometer(25.5);
+    MetricsSensor* s2 = new Barometer(1013.2);
+
+    cout << "Thermometer Data: " << s1->readData() << endl;
+    s1->displayReport();
+
+    cout << "Barometer Data: " << s2->readData() << endl;
+    s2->displayReport();
+
+    delete s1;
+    delete s2;
+    return 0;
+}
