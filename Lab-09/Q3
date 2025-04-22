@@ -1,0 +1,60 @@
+24k-0704
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Course {
+protected:
+    string courseCode;
+    int credits;
+public:
+    Course(const string& code, int cred) : courseCode(code), credits(cred) {}
+    virtual double calculateGrade() = 0;
+    virtual void displayInfo() = 0;
+    virtual ~Course() {}
+};
+
+class LectureCourse : public Course {
+private:
+    double examScore;
+    double assignmentScore;
+public:
+    LectureCourse(const string& code, int cred, double exam, double assign) 
+        : Course(code, cred), examScore(exam), assignmentScore(assign) {}
+    double calculateGrade() override {
+        return (examScore * 0.7) + (assignmentScore * 0.3);
+    }
+    void displayInfo() override {
+        cout << "Lecture Course: " << courseCode << " (" << credits << " credits)" << endl;
+    }
+};
+
+class LabCourse : public Course {
+private:
+    double labScore;
+    double projectScore;
+public:
+    LabCourse(const string& code, int cred, double lab, double project) 
+        : Course(code, cred), labScore(lab), projectScore(project) {}
+    double calculateGrade() override {
+        return (labScore * 0.6) + (projectScore * 0.4);
+    }
+    void displayInfo() override {
+        cout << "Lab Course: " << courseCode << " (" << credits << " credits)" << endl;
+    }
+};
+
+int main() {
+    Course* c1 = new LectureCourse("CS101", 3, 85.0, 90.0);
+    Course* c2 = new LabCourse("CS102", 4, 75.0, 80.0);
+
+    c1->displayInfo();
+    cout << "Final Grade: " << c1->calculateGrade() << endl;
+
+    c2->displayInfo();
+    cout << "Final Grade: " << c2->calculateGrade() << endl;
+
+    delete c1;
+    delete c2;
+    return 0;
+}
