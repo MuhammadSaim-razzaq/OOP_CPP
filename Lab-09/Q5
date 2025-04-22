@@ -1,0 +1,52 @@
+24k-0704
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Shipment {
+protected:
+    string trackingNumber;
+    double weight;
+public:
+    Shipment(const string& num, double w) : trackingNumber(num), weight(w) {}
+    virtual double estimateDeliveryTime() = 0;
+    virtual void showDetails() = 0;
+    virtual ~Shipment() {}
+};
+
+class AirShipment : public Shipment {
+public:
+    AirShipment(const string& num, double w) : Shipment(num, w) {}
+    double estimateDeliveryTime() override {
+        return weight * 0.1; 
+    }
+    void showDetails() override {
+        cout << "Air Shipment: " << trackingNumber << " (" << weight << " kg)" << endl;
+    }
+};
+
+class GroundShipment : public Shipment {
+public:
+    GroundShipment(const string& num, double w) : Shipment(num, w) {}
+    double estimateDeliveryTime() override {
+        return weight * 0.5; 
+    }
+    void showDetails() override {
+        cout << "Ground Shipment: " << trackingNumber << " (" << weight << " kg)" << endl;
+    }
+};
+
+int main() {
+    Shipment* ship1 = new AirShipment("AIR123", 10.0);
+    Shipment* ship2 = new GroundShipment("GRD456", 10.0);
+
+    ship1->showDetails();
+    cout << "Estimated Delivery Time: " << ship1->estimateDeliveryTime() << " hours" << endl;
+
+    ship2->showDetails();
+    cout << "Estimated Delivery Time: " << ship2->estimateDeliveryTime() << " hours" << endl;
+
+    delete ship1;
+    delete ship2;
+    return 0;
+}
