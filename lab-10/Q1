@@ -1,0 +1,25 @@
+//24k-0704
+
+#include<iostream>
+#include<sstream>
+#include<fstream>
+using namespace std;
+int main(){
+    ifstream inFile("vehicles.txt");
+
+    if(!inFile.is_open()){
+        cerr<<"Error: Could not open the file";
+        return 1;
+    }
+
+    string line;
+    while(getline(inFile,line)){
+        if(line.empty()||line[0]=='#')  continue;
+
+        cout<<line<<endl;
+    }
+
+    inFile.close();
+    return 0;
+
+};
