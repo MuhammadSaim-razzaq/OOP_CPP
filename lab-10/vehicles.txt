@@ -1,0 +1,4 @@
+# This is a comment
+AutonomousCar,AC101,RoboTaxi,2023,SW:4.5,CERT-AI
+
+ElectricVehicle,EV202,VoltZ,2022,Battery:150,CERT-ECO
