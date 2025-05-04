@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <sstream>
+using namespace std;
+
+int main() {
+    ifstream file("vehicles.txt");
+    if (!file) {
+        cerr << "file not opened";
+        return 1;
+    }
+
+    string line;
+    while (getline(file, line)) {
+        // Skip comment lines or empty lines
+        if (line.empty() || line[0] == '#') {
+            continue;
+        }
+
+        istringstream iss(line);
+        string type, modelID, name, year, spec, certification;
+
+        if (!getline(iss, type, ',') ||
+            !getline(iss, modelID, ',') ||
+            !getline(iss, name, ',') ||
+            !getline(iss, year, ',') ||
+            !getline(iss, spec, ',') ||
+            !getline(iss, certification, ',')) {
+            cerr << "malformated line(skipped):" << line << endl;
+            continue;
+        }
+
+        try {
+            size_t colonpos = spec.find(':');
+            if (colonpos == string::npos) {
+                cerr << "Invalid specification format: " << spec << endl;
+                continue;
+            }
+
+            string specType = spec.substr(0, colonpos);
+            string specValue = spec.substr(colonpos + 1);
+            
+            float value = stof(specValue);
+            
+            cout << "Vehicle: " << name << " (" << type << ")" << endl;
+            cout << "Spec: " << specType << " = " << value << endl;
+            cout << "Certification: " << certification << endl << endl;
+
+        } catch (const invalid_argument& e) {
+            cerr << "Invalid number in line: " << line << endl;
+        } catch (const out_of_range& e) {
+            cerr << "Number too big/small in line: " << line << endl;
+        }
+    }
+   return 0;
+}
