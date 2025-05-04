@@ -1,0 +1,70 @@
+//24k-0704
+
+#include<iostream>
+#include<exception>
+using namespace std;
+
+class DMMException:public exception{
+    int r1,r2,c2,c1;
+public:
+    DMMException(int r1,int r2,int c2,int c1):
+    r1(r1),r2(r2),c1(c1),c2(c2){};
+
+    const char* what() const noexcept override{
+        return "Dimensions mismatch error";
+    }
+};
+
+template<typename T>
+class Matrix{
+    T** data;
+    int rows, cols;
+public:
+    Matrix(int r, int c):rows(r),cols(c)
+    {
+        data = new T*[rows];
+        for(int i=0;i<r;i++)
+        data[i]=new T[c];
+    }
+
+    void setvalue(int i,int j,int val){
+        data[i][j]=val;
+    }
+    T getval(int i,int j) const{
+        return data[i][j];
+    }
+
+    void print() const {
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j)
+                cout << data[i][j] << " ";
+            cout << endl;
+        }
+    }
+
+    Matrix<T> operator+(const Matrix<T>& other)
+    {
+        if(rows != other.rows|| cols != other.cols) 
+            throw DMMException(rows,cols,other.rows,other.cols);
+
+        Matrix<T> M3(rows,cols);
+        for(int i=0; i<rows;i++){
+            for(int j=0; j<cols;j++){
+                M3.setvalue(i,j,data[i][j]+other.data[i][j]);
+            }
+        }
+        return M3;
+    }
+};
+int main(){
+    try{
+        Matrix<int> A(2,2);
+        Matrix<int> B(3,3);
+        A.setvalue(0,0,3);
+        B.setvalue(0,0,5);
+        Matrix<int> C= A+B;
+        C.print();
+    }catch(DMMException& e){
+        cout<<e.what()<<endl;
+    }
+}
