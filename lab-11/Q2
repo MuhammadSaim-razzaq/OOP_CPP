@@ -1,0 +1,60 @@
+#include<iostream>
+#include<exception>
+using namespace std;
+
+class QueOverflowException:public exception{};
+class QueUnderflowException: public exception{};
+
+template<typename T>
+class Queue{
+    private:
+        T* data;
+        size_t capacity;
+        size_t head;
+        size_t tail;
+        size_t count;
+    public:
+        Queue(size_t capacity)
+        : capacity(capacity), head(0), tail(0), count(0) {
+        data = new T[capacity];
+        }
+
+        void enqueue(T item) {
+            if (count == capacity) throw QueOverflowException();
+            data[tail] = item;
+            tail = (tail + 1) % capacity;
+            count++;
+        }
+
+        T dequeue() {
+            if (count == 0) throw QueUnderflowException();
+            T item = data[head];
+            head = (head + 1) % capacity;
+            count--;
+            return item;
+        }
+
+
+};
+int main(){
+    Queue<int> q(3);
+    
+    try {
+        while(true) {
+            q.enqueue(1); // Will eventually throw
+        }
+    } catch (const QueOverflowException&) {
+        std::cout << "Attempting to enqueue to a full queue...\n"
+                  << "Caught QueueOverflowException - what(): " 
+                  << exception().what() << "\n\n";
+    }
+
+    Queue<int> empty(3);
+    try {
+        empty.dequeue();
+    } catch (const QueUnderflowException&) {
+        std::cout << "Attempting to dequeue from an empty queue...\n"
+                  << "Caught QueueUnderflowException - what(): " 
+                  << exception().what() << "\n";
+    }
+}
